@@ -1,5 +1,5 @@
 ---
-title: "scImpute: a statistical method for accurate and robust  imputation of scRNA-seq data"
+title: "Introduction to scImpute"
 author: "Wei Vivian Li, Jingyi Jessica Li"
 # author:
 # - name: Wei Vivian Li, Jingyi Jessica Li
@@ -7,6 +7,7 @@ author: "Wei Vivian Li, Jingyi Jessica Li"
 #   - Department of Statistics, University of California, Los Angeles
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+#output: pdf_document
 vignette: >
   %\VignetteIndexEntry{scImpute: a statistical method for accurate and robust   imputation of scRNA-seq data}
   %\VignetteEngine{knitr::rmarkdown}
