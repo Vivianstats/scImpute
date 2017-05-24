@@ -1,4 +1,4 @@
-scImpute: a statistical method for accurate and robust imputation of scRNA-seq data
+scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
 2017-05-24
@@ -17,7 +17,7 @@ The emerging single cell RNA sequencing (scRNA-seq) technologies enable the inve
 -   differential gene expression analysis
 -   time-series analysis of gene expression dynamics
 
-Any suggestions on the package are welcome!
+Any suggestions on the package are welcome! For technical problems, please report to [Issues](https://github.com/Vivianstats/scImpute/issues). For suggestions and comments on the method, please contact Wei (<liw@ucla.edu>) or Dr. Jessica Li (<jli@stat.ucla.edu>).
 
 Installation
 ------------
