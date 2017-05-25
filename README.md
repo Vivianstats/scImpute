@@ -7,9 +7,7 @@ Wei Vivian Li, Jingyi Jessica Li
 Introduction
 ------------
 
-The emerging single cell RNA sequencing (scRNA-seq) technologies enable the investigation of transcriptomic landscape at single-cell resolution. However, scRNA-seq analysis is complicated by the excess of zero or near zero counts in the data, which are the so-called dropouts due to low amounts of mRNA within each individual cell. Consequently, downstream analysis of scRNA-seq woule be severely biased if the dropout events are not properly corrected. `scImpute` is developed to accurately and robustly impute the dropout values in scRNA-seq data.
-
-`scImpute` can be applied to raw read count matrix before the users perform downstream analyses such as
+`scImpute` is developed to accurately and robustly impute the dropout values in scRNA-seq data. `scImpute` can be applied to raw read count matrix before the users perform downstream analyses such as
 
 -   dimension reduction of scRNA-seq data
 -   normalization of scRNA-seq data
@@ -46,4 +44,4 @@ scimpute(# full path to raw count matrix
          ncores = 10)              # number of cores used in parallel computation
 ```
 
-This function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package manual or vignette.
+This function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
