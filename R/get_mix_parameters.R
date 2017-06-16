@@ -2,8 +2,9 @@ get_mix_parameters <-
 function (count, point = log10(1.01), path, ncores = 8) 
 {
     count = as.matrix(count)
-    null_genes = which(rowSums(count) == point * ncol(count))
+    null_genes = which(abs(rowSums(count) - point * ncol(count)) < 1e-10)
     parslist = mclapply(1:nrow(count), function(ii) {
+        # print(ii)
         if (ii%%500 == 0) {
             gc()
             print(ii)
@@ -14,13 +15,11 @@ function (count, point = log10(1.01), path, ncores = 8)
         xdata = count[ii, ]
         inits = rep(0, 5)
         inits[1] = sum(xdata == point)/length(xdata)
-        if (inits[1] == 0) 
-            inits[1] = 0.01
+        if (inits[1] == 0) {inits[1] = 0.01}
         inits[2:3] = c(0.5, 1)
         xdata_rm = xdata[xdata > point]
         inits[4:5] = c(mean(xdata_rm), sd(xdata_rm))
-        if (is.na(inits[5])) 
-            inits[5] = 0
+        if (is.na(inits[5])) {inits[5] = 0}
         paramt = inits
         A = diag(1, 2)
         B = matrix(0, ncol = 1, nrow = 2)

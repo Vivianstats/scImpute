@@ -1,6 +1,7 @@
 ---
-title: "scImpute: a statistical method for accurate and robust  imputation of scRNA-seq data"
+title: "scImpute: accurate and robust  imputation of scRNA-seq data"
 author: "Wei Vivian Li, Jingyi Jessica Li"
+
 date: "`r Sys.Date()`"
 output: github_document
 ---
@@ -16,9 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduction
-The emerging single cell RNA sequencing (scRNA-seq) technologies enable the investigation of transcriptomic landscape at single-cell resolution. However, scRNA-seq analysis is complicated by the excess of zero or near zero counts in the data, which are the so-called dropouts due to low amounts of mRNA within each individual cell. Consequently, downstream analysis of scRNA-seq woule be severely biased if the dropout events are not properly corrected. `scImpute` is developed to accurately and robustly impute the dropout values in scRNA-seq data.
-
-`scImpute` can be applied to raw read count matrix before the users perform downstream analyses such as
+`scImpute` is developed to accurately and robustly impute the dropout values in scRNA-seq data. `scImpute` can be applied to raw read count matrix before the users perform downstream analyses such as
 
 - dimension reduction of scRNA-seq data
 - normalization of scRNA-seq data
@@ -26,7 +25,7 @@ The emerging single cell RNA sequencing (scRNA-seq) technologies enable the inve
 - differential gene expression analysis
 - time-series analysis of gene expression dynamics
 
-Any suggestions on the package are welcome!
+Any suggestions on the package are welcome! For technical problems, please report to [Issues](https://github.com/Vivianstats/scImpute/issues). For suggestions and comments on the method, please contact Wei (<liw@ucla.edu>) or Dr. Jessica Li (<jli@stat.ucla.edu>).
 
 ## Installation
 The package is not on CRAN yet. For installation please use the following codes in `R`
@@ -51,5 +50,5 @@ scimpute(# full path to raw count matrix
          drop_thre = 0.5,          # threshold set on dropout probability
          ncores = 10)              # number of cores used in parallel computation
 ```
-This function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package manual or vignette.
+This function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
 

@@ -14,6 +14,7 @@ function (filetype, path, out_dir)
     raw_count = as.matrix(raw_count)
     totalCounts_by_cell = colSums(raw_count)
     saveRDS(totalCounts_by_cell, file = paste0(out_dir, "totalCounts_by_cell.rds"))
+    totalCounts_by_cell[totalCounts_by_cell == 0] = 1
     raw_count = sweep(raw_count, MARGIN = 2, totalCounts_by_cell/10^6, 
         FUN = "/")
     if (min(raw_count) < 0) {

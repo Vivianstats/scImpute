@@ -9,7 +9,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 #output: pdf_document
 vignette: >
-  %\VignetteIndexEntry{scImpute: a statistical method for accurate and robust   imputation of scRNA-seq data}
+  %\VignetteIndexEntry{scImpute: accurate and robust imputation for scRNA-seq data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
