@@ -80,7 +80,7 @@ If `outfile = "csv"`, this function will create a new file `scimpute_count.csv` 
 
 
 ## Re-apply scImpute with a different `drop_thre`
-The most time-consuming part in `scImpute` is to estimate a mixture model for each gene. This step does not depend on `drop_thre` and only needed to be done once for each data set. Therefore, if users have already ran `scimpute` on their data sets for at least once, then we can use `scimpute_quick` to skip the time-consuming step and re-apply `scImpute` to the same data with a different `drop_thre`. The arguments in `scimpute_quick` are basically the same as in `scimpute`. The obly thing to note is that `out_dir` should be the same as the one used in previous runs, so that the function is able to locate intermediate files generated beforehand. All we need is
+The first step in `scImpute` is to estimate a mixture model for each gene. This step does not depend on `drop_thre` and only needed to be done once for each data set. Therefore, if users have already ran `scimpute` on their data sets for at least once, then we can use `scimpute_quick` to skip the first step and re-apply `scImpute` to the same data with a different `drop_thre`. The arguments in `scimpute_quick` are basically the same as in `scimpute`. One thing to be careful with is that `out_dir` should be the same as the one used before, so that the function is able to locate intermediate files generated beforehand. All we need is
 ```{r eval = FALSE}
 scimpute_quick(
          count_path = system.file("extdata", "raw_count.csv", package = "scImpute"), 
@@ -112,9 +112,9 @@ Note that we do not recommend using `labels` when the cell classes represent com
 
 ## How to save computation time with `scImpute`
 
-`scImpute` will benefit a lot from parallel computation, and each processor does not require heavy memory cost. For example, `scimpute` completes computation in 30 minutes when applied to a dataset with 10,000 genes and 100 cells, running with 10 cores. The memory requirement for this data set is around 2G. The running time mostly depends on
+`scImpute` benefits from parallel computation, and each processor does not require heavy memory cost. `scimpute` completes computation in seconds when applied to a dataset with 10,000 genes and 100 cells, running with 10 cores. The memory requirement for this data set is around 2G. The running time mostly depends on
 
 * number of processors (`ncores`)
-* number of genes in the scRNA-seq data
+* number of cells in the scRNA-seq data
 
 Again, we note that for any data sets, `scimpute` should only be applied once to save time. Rerunning with different parameters should be applied with `scimpute_quick`.

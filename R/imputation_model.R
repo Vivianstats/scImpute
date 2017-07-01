@@ -55,7 +55,7 @@ function (count, point, parslist, drop_thre = 0.5, method = 2,
         }
     }
     res = mclapply(1:J, function(cellid) {
-        if (cellid%%100 == 0) 
+        if (cellid %% 50 == 0) 
             print(cellid)
         y = try(impute(I, cellid, count, parslist, droprate, 
             method), silent = TRUE)
@@ -136,7 +136,7 @@ imputation_model1_bytype <-
     for (kk in 1:length(type_list)) {
       cellIDs = type_list[[kk]]
       res = mclapply(cellIDs, function(cellid) {
-        if (cellid %% 100 == 0) print(cellid)
+        if (cellid %% 50 == 0) print(cellid)
         y = try(impute(I, cellid, cellIDs, count, parslist, droprate, 
                        method), silent = TRUE)
         if (class(y) == "try-error") {

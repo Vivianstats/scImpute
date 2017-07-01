@@ -22,7 +22,6 @@
 #' @export
 #' @import parallel
 #' @import glmnet
-#' @import maxLik
 #' @import stats
 #' @import utils
 scimpute <-
@@ -84,7 +83,6 @@ function (count_path, infile = "csv", outfile = "csv", out_dir,
 #' @export
 #' @import parallel
 #' @import glmnet
-#' @import maxLik
 #' @import stats
 #' @import utils
 scimpute_quick <-
