@@ -1,11 +1,19 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2017-07-01
+2017-10-22
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 News
 ----
+
+> 2017/10/22:
+
+-   Version 0.0.3 is released!
+-   Estimation of dropout probabilities is more accurate.
+-   Imputation step is more robust.
+-   `scimpute()` incorporates a new parameter `Kcluster` to specify the number of cell subpopulations.
+-   `scImpute` is now able to detect outlier cells.
 
 > 2017/07/01:
 
@@ -48,8 +56,10 @@ scimpute(# full path to raw count matrix
          infile = "csv",           # format of input file
          outfile = "csv",          # format of output file
          out_dir = "./",           # full path to output directory
+         labeled = FALSE,          # cell type labels not available
          drop_thre = 0.5,          # threshold set on dropout probability
+         Kcluster = 2,             # 2 cell subpopulations
          ncores = 10)              # number of cores used in parallel computation
 ```
 
-This function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
+This function returns the column indices of outlier cells, and creates a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).

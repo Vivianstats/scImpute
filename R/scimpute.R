@@ -1,4 +1,4 @@
-#' use SCimpute to impute dropout values in scRNA-seq data
+#' use scImpute to impute dropout values in scRNA-seq data
 #'
 #' @param count_path A character specifying the full path of the raw count matrix;
 #' @param infile A character specifying the type of file storing the raw count matrix;
@@ -9,107 +9,73 @@
 #' can be either "csv" or "txt".
 #' @param out_dir A character specifying the full path of the output directory, 
 #' which is used to store all intermdediate and final outputs.
+#' @param labeled A logical value indicating whether cell type information is available.
+#' \code{labels} must be specified if \code{labeled = TRUE}.
 #' @param drop_thre A number between 0 and 1, 
 #' specifying the threshold to determine dropout values.
-#' @param celltype A logical value indicating whether cell type information is available.
-#' \code{labels} must be specified if \code{celltype = TRUE}.
+#' @param Kcluster An integer specifying the number of cell subpopulations. 
+#' This parameter can be determined based on prior knowledge or clustering of raw data.
+#' \code{Kcluster} is used to determine the candidate neighbors of each cell.
 #' @param labels A character vector specifying the cell type of 
-#' each column in the raw count matrix. Only needed when \code{celltype = TRUE}.
+#' each column in the raw count matrix. Only needed when \code{labeled = TRUE}.
 #' Each cell type should have at least two cells for imputation.
 #' @param ncores A integer specifying the number of cores used for parallel computation.
-#' @return Save the imputed count matrix to SCimpute.csv or SCimpute.txt 
+#' @return scImpute returns a vector giving the column indices of outlier cells.
+#' It saves the imputed count matrix to scimpute.csv or scimpute.txt 
 #' (depending on \code{outfile}) to \code{out_dir}.
 #' @export
 #' @import parallel
-#' @import glmnet
-#' @import stats
-#' @import utils
+#' @importFrom stats complete.cases dgamma dnorm prcomp quantile rgamma rnorm sd uniroot
+#' @importFrom kernlab specc
+#' @import penalized 
+#' @importFrom utils read.csv read.table write.csv write.table
+#' @author Wei Vivian Li, \email{liw@ucla.edu}
+#' @author Jingyi Jessica Li, \email{jli@stat.ucla.edu}
+#' @references \url{https://www.biorxiv.org/content/early/2017/05/24/141598}
 scimpute <-
-function (count_path, infile = "csv", outfile = "csv", out_dir, 
-    drop_thre = 0.5, celltype = FALSE, labels = NULL, ncores = 5) 
+function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE, 
+          drop_thre = 0.5, Kcluster = NULL, labels = NULL, ncores = 5) 
 {   
-    if(celltype == TRUE & is.null(labels)){
-      print("'labels' must be specified when 'celltype = TRUE'!"); stop()
+    if(labeled == TRUE & is.null(labels)){
+      stop("'labels' must be specified when 'labeled = TRUE'!")
+    }
+    if(labeled == FALSE & is.null(Kcluster)){
+      stop("'Kcluster' must be specified when 'labeled = FALSE'!")
     }
     # print(drop_thre)
     print("reading in raw count matrix ...")
     count_lnorm = read_count(filetype = infile, path = count_path, out_dir = out_dir)
+    if(labeled == TRUE){
+      if(length(labels) != ncol(count_lnorm)){
+        stop("number of cells does not match number of labels !")
+      }
+    }
     genenames = rownames(count_lnorm)
     cellnames = colnames(count_lnorm)
     print("estimating mixture models ...")
-    get_mix_parameters(count = count_lnorm, point = log10(1.01), 
-        path = paste0(out_dir, "parslist.rds"), ncores = ncores)
-    parslist = readRDS(paste0(out_dir, "parslist.rds"))
     
     print("imputing dropout values ...")
-    if (celltype == FALSE){
-      count_imp = imputation_model1(count = count_lnorm, point = log10(1.01), 
-                                    parslist, drop_thre = drop_thre, method = 2, ncores = ncores)
+    if (labeled == FALSE){
+      res_imp = imputation_model8(count = count_lnorm, labeled = FALSE, 
+                                  point = log10(1.01), drop_thre = drop_thre, 
+                                  Kcluster = Kcluster, 
+                                  out_dir = out_dir, ncores = ncores)
     }else{
-      count_imp = imputation_model1_bytype(count = count_lnorm, labels, point = log10(1.01), parslist, 
-                                           drop_thre = drop_thre, method = 2, ncores = ncores)
+      res_imp = imputation_wlabel_model8(count = count_lnorm, labeled = TRUE, 
+                                         cell_labels = labels, point = log10(1.01), 
+                                         drop_thre = drop_thre, 
+                                         Kcluster = NULL, out_dir = out_dir, 
+                                         ncores = ncores)
     }
+    count_imp = res_imp$count_imp
+    outliers = res_imp$outlier
     count_imp = 10^count_imp - 1.01
     rownames(count_imp) = genenames
     colnames(count_imp) = cellnames
     print("writing imputed count matrix ...")
     write_count(count_imp, filetype = outfile, out_dir)
-    return(0)
+    return(outliers)
 }
 
 
 
-#' quick re-run of SCimpute with a different \code{drop_thre}
-#'
-#' @param count_path A character specifying the full path of the raw count matrix;
-#' @param infile A character specifying the type of file storing the raw count matrix;
-#' can be either "csv" or "txt". The input file shoule have rows representing genes and
-#' columns representing cells, with its first row as cell names 
-#' and first column as gene names.
-#' @param outfile A character specifying the type of file storing the imputed count matrix;
-#' can be either "csv" or "txt".
-#' @param out_dir A character specifying the full path of the output directory, 
-#' which is used to store all intermdediate and final outputs.
-#' @param drop_thre A number between 0 and 1, 
-#' specifying the threshold to determine dropout values.
-#' @param celltype A logical value indicating whether cell type information is available.
-#' \code{labels} must be specified if \code{celltype = TRUE}.
-#' @param labels A character vector specifying the cell type of 
-#' each column in the raw count matrix. Only needed when \code{celltype = TRUE}.
-#' Each cell type should have at least two cells for imputation.
-#' @param ncores A integer specifying the number of cores used for parallel computation.
-#' @return Save the imputed count matrix to SCimpute.csv or SCimpute.txt 
-#' (depending on \code{outfile}) to \code{out_dir}.
-#' @export
-#' @import parallel
-#' @import glmnet
-#' @import stats
-#' @import utils
-scimpute_quick <-
-  function (count_path, infile = "csv", outfile = "csv", out_dir, 
-            drop_thre = 0.5, celltype = FALSE, labels = NULL, ncores = 5) 
-  {
-    if(celltype == TRUE & is.null(labels)){
-      print("'labels' must be specified when 'celltype = TRUE'!"); stop()
-    }
-    # print(drop_thre)
-    print("reading in raw count matrix ...")
-    count_lnorm = read_count(filetype = infile, path = count_path, out_dir = out_dir)
-    genenames = rownames(count_lnorm)
-    cellnames = colnames(count_lnorm)
-    parslist = readRDS(paste0(out_dir, "parslist.rds"))
-    print("imputing dropout values ...")
-    if (celltype == FALSE){
-      count_imp = imputation_model1(count = count_lnorm, point = log10(1.01), 
-                                    parslist, drop_thre = drop_thre, method = 2, ncores = ncores)
-    }else{
-      count_imp = imputation_model1_bytype(count = count_lnorm, labels = labels, point = log10(1.01), parslist, 
-                                           drop_thre = drop_thre, method = 2, ncores = ncores)
-    }
-    count_imp = 10^count_imp - 1.01
-    rownames(count_imp) = genenames
-    colnames(count_imp) = cellnames
-    print("writing imputed count matrix ...")
-    write_count(count_imp, filetype = outfile, out_dir)
-    return(0)
-  }

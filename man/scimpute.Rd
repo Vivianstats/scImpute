@@ -2,10 +2,11 @@
 % Please edit documentation in R/scimpute.R
 \name{scimpute}
 \alias{scimpute}
-\title{use SCimpute to impute dropout values in scRNA-seq data}
+\title{use scImpute to impute dropout values in scRNA-seq data}
 \usage{
 scimpute(count_path, infile = "csv", outfile = "csv", out_dir,
-  drop_thre = 0.5, celltype = FALSE, labels = NULL, ncores = 5)
+  labeled = FALSE, drop_thre = 0.5, Kcluster = NULL, labels = NULL,
+  ncores = 5)
 }
 \arguments{
 \item{count_path}{A character specifying the full path of the raw count matrix;}
@@ -21,22 +22,35 @@ can be either "csv" or "txt".}
 \item{out_dir}{A character specifying the full path of the output directory, 
 which is used to store all intermdediate and final outputs.}
 
+\item{labeled}{A logical value indicating whether cell type information is available.
+\code{labels} must be specified if \code{labeled = TRUE}.}
+
 \item{drop_thre}{A number between 0 and 1, 
 specifying the threshold to determine dropout values.}
 
-\item{celltype}{A logical value indicating whether cell type information is available.
-\code{labels} must be specified if \code{celltype = TRUE}.}
+\item{Kcluster}{An integer specifying the number of cell subpopulations. 
+This parameter can be determined based on prior knowledge or clustering of raw data.
+\code{Kcluster} is used to determine the candidate neighbors of each cell.}
 
 \item{labels}{A character vector specifying the cell type of 
-each column in the raw count matrix. Only needed when \code{celltype = TRUE}.
+each column in the raw count matrix. Only needed when \code{labeled = TRUE}.
 Each cell type should have at least two cells for imputation.}
 
 \item{ncores}{A integer specifying the number of cores used for parallel computation.}
 }
 \value{
-Save the imputed count matrix to SCimpute.csv or SCimpute.txt 
+scImpute returns a vector giving the column indices of outlier cells.
+It saves the imputed count matrix to scimpute.csv or scimpute.txt 
 (depending on \code{outfile}) to \code{out_dir}.
 }
 \description{
-use SCimpute to impute dropout values in scRNA-seq data
+use scImpute to impute dropout values in scRNA-seq data
+}
+\references{
+\url{https://www.biorxiv.org/content/early/2017/05/24/141598}
+}
+\author{
+Wei Vivian Li, \email{liw@ucla.edu}
+
+Jingyi Jessica Li, \email{jli@stat.ucla.edu}
 }

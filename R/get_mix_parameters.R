@@ -62,7 +62,7 @@ function (count, point = log10(1.01), path, ncores = 8)
     count = as.matrix(count)
     null_genes = which(abs(rowSums(count) - point * ncol(count)) < 1e-10)
     parslist = mclapply(1:nrow(count), function(ii) {
-      if (ii%%500 == 0) {
+      if (ii %% 2000 == 0) {
         gc()
         print(ii)
       }
