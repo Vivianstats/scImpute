@@ -172,6 +172,7 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
     })
     # imputation
     subres = mclapply(1:Jc, function(cellid) {
+      if (cellid %% 10) {gc()}
       if (cellid %% 100 == 0) print(cellid)
       nbs = setdiff(1:Jc, cellid)
       if (length(nbs) == 0) {return(NULL)}
