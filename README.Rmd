@@ -16,6 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 ## News
+> 2017/10/27:
+
+ + Version 0.0.4 is released!
+ + scImpute now supports multi-code parallelism.
+ 
 > 2017/10/22:
 
  + Version 0.0.3 is released!

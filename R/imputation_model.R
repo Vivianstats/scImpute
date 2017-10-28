@@ -136,6 +136,9 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   saveRDS(clust, file = paste0(out_dir, "clust.rds"))
   # mixture model
   nclust = sum(!is.na(unique(clust)))
+  cl = makeCluster(ncores)
+  registerDoParallel(cl)
+  
   for(cc in 1:nclust){
     print(paste("estimating dropout probability for type", cc, "..."))
     paste0(out_dir, "pars", cc, ".rds")
@@ -171,9 +174,10 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
       which(droprate[, cellid] <= drop_thre)
     })
     # imputation
-    subres = mclapply(1:Jc, function(cellid) {
-      if (cellid %% 10) {gc()}
-      if (cellid %% 100 == 0) print(cellid)
+    # registerDoSNOW(cl)
+    subres = foreach(cellid = 1:Jc, .packages = c("penalized"), 
+                     .combine = cbind, .export = c("impute_nnls")) %dopar% {
+      if (cellid %% 100 == 0) {gc()}
       nbs = setdiff(1:Jc, cellid)
       if (length(nbs) == 0) {return(NULL)}
       geneid_drop = setA[[cellid]]
@@ -182,14 +186,16 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
                           geneid_obs, nbs, distc = dist_cells[cells, cells]), 
               silent = TRUE)
       if (class(y) == "try-error") {
-        print(y)
+        # print(y)
         y = subcount[, cellid, drop = FALSE]
       }
       return(y)
-    }, mc.cores = ncores)
-    count_imp[valid_genes, cells] = Reduce(cbind, subres)
+    }
+    
+    
+    count_imp[valid_genes, cells] = subres
   }
-
+  stopCluster(cl)
   outlier = which(is.na(clust))
   count_imp[count_imp < point] = point
   return(list(count_imp = count_imp, outlier = outlier))
@@ -214,6 +220,9 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
   
   # mixture model
   nclust = sum(!is.na(unique(clust)))
+  cl = makeCluster(ncores)
+  registerDoParallel(cl)
+  
   for(cc in 1:nclust){
     print(paste("estimating dropout probability for type", cc, "..."))
     paste0(out_dir, "pars", cc, ".rds")
@@ -249,8 +258,10 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
       which(droprate[, cellid] <= drop_thre)
     })
     # imputation
-    subres = mclapply(1:Jc, function(cellid) {
-      if (cellid %% 100 == 0) print(cellid)
+    # registerDoSNOW(cl)
+    subres = foreach(cellid = 1:Jc, .packages = c("penalized"), 
+                     .combine = cbind, .export = c("impute_nnls")) %dopar% {
+      if (cellid %% 100 == 0) {gc()}
       # print(cellid)
       nbs = setdiff(1:Jc, cellid)
       if (length(nbs) == 0) {return(NULL)}
@@ -260,14 +271,14 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
                           geneid_obs, nbs, distc = dist_cells[cells, cells]),
               silent = TRUE)
       if (class(y) == "try-error") {
-        print(y)
+        # print(y)
         y = subcount[, cellid, drop = FALSE]
       }
       return(y)
-    }, mc.cores = ncores)
-    count_imp[valid_genes, cells] = Reduce(cbind, subres)
+    }
+    count_imp[valid_genes, cells] = subres
   }
-  
+  stopCluster(cl)
   outlier = integer(0)
   count_imp[count_imp < point] = point
   return(list(count_imp = count_imp, outlier = outlier))

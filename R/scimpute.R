@@ -25,6 +25,8 @@
 #' (depending on \code{outfile}) to \code{out_dir}.
 #' @export
 #' @import parallel
+#' @import doParallel
+#' @import foreach
 #' @importFrom stats complete.cases dgamma dnorm prcomp quantile rgamma rnorm sd uniroot
 #' @importFrom kernlab specc
 #' @import penalized 
@@ -52,9 +54,7 @@ function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE,
     }
     genenames = rownames(count_lnorm)
     cellnames = colnames(count_lnorm)
-    print("estimating mixture models ...")
     
-    print("imputing dropout values ...")
     if (labeled == FALSE){
       res_imp = imputation_model8(count = count_lnorm, labeled = FALSE, 
                                   point = log10(1.01), drop_thre = drop_thre, 
