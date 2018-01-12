@@ -12,7 +12,7 @@
 
 <meta name="author" content="Wei Vivian Li, Jingyi Jessica Li" />
 
-<meta name="date" content="2017-10-22" />
+<meta name="date" content="2018-01-12" />
 
 <title>Introduction to scImpute</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to scImpute</h1>
 <h4 class="author"><em>Wei Vivian Li, Jingyi Jessica Li</em></h4>
-<h4 class="date"><em>2017-10-22</em></h4>
+<h4 class="date"><em>2018-01-12</em></h4>
 
 
 
@@ -120,14 +120,14 @@ drop_thre =<span class="st"> </span><span class="fl">0.5</span>
 ncores =<span class="st"> </span><span class="dv">10</span>
 <span class="kw">scimpute</span>(count_path, infile, outfile, out_dir, <span class="dt">labeled =</span> <span class="ot">FALSE</span>,  drop_thre, Kcluster, ncores)  </code></pre></div>
 <p>If <code>outfile = &quot;csv&quot;</code>, this function will create a new file <code>scimpute_count.csv</code> in <code>out_dir</code> to store the imputed count matrix; if <code>outfile = &quot;txt&quot;</code>, this function will create a new file <code>scimpute_count.txt</code> in <code>out_dir</code>.</p>
-<p>Note that the order of parameters matters in R functions, so we suggest using the format in <strong>Quick start</strong> to specify parameters and avoid mistakes.</p>
+<p>Note that the order of parameters matters in R functions, so we suggest using the format in <strong>Quick start</strong> to specify parameters and avoid mistakes. If the users would like to apply <code>scImpute</code> on data coming from homogeneous cells, this can be achieved by setting <code>Kcluster = 1</code> and <code>labeled = FALSE</code>.</p>
 </div>
 <div id="apply-scimpute-with-cell-type-information" class="section level2">
 <h2>Apply scImpute with cell type information</h2>
 <p>Sometimes users may have the cell type (or subpopulation) information of the single cells and <code>scimpute</code> can take advantage of this information to impute among each cell type. To do this, we need a character vector <code>labels</code> specifying the cell type of each column in the raw count matrix. In other words, the length of <code>labels</code> equals the number of cells and the order of elements in <code>labels</code> should match the order of columns in the raw count matrix. Then we just need to specify <code>labeled = TRUE</code> in <code>scimpute</code> (default is <code>FALSE</code>) and specify the <code>labels</code> argument. <code>Kcluster</code> is not used when <code>labeled = TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">labels =<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;labels.rds&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;scImpute&quot;</span>))
-labels[<span class="dv">1</span>:<span class="dv">5</span>]
-&gt;<span class="st"> </span>[<span class="dv">1</span>] <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c2&quot;</span> <span class="st">&quot;c2&quot;</span>
+labels[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]
+<span class="op">&gt;</span><span class="st"> </span>[<span class="dv">1</span>] <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c1&quot;</span> <span class="st">&quot;c2&quot;</span> <span class="st">&quot;c2&quot;</span>
 
 <span class="kw">scimpute</span>(count_path, 
          <span class="dt">infile =</span> <span class="st">&quot;csv&quot;</span>, 

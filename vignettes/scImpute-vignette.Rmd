@@ -83,7 +83,7 @@ scimpute(count_path, infile, outfile, out_dir, labeled = FALSE,  drop_thre, Kclu
 ```
 If `outfile = "csv"`, this function will create a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix; if `outfile = "txt"`, this function will create a new file `scimpute_count.txt` in `out_dir`.
 
-Note that the order of parameters matters in R functions, so we suggest using the format in **Quick start** to specify parameters and avoid mistakes.
+Note that the order of parameters matters in R functions, so we suggest using the format in **Quick start** to specify parameters and avoid mistakes. If the users would like to apply `scImpute` on data coming from homogeneous cells, this can be achieved by setting `Kcluster = 1` and `labeled = FALSE`. 
 
 ## Apply scImpute with cell type information
 

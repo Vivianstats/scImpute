@@ -116,7 +116,6 @@ impute_nnls = function(Ic, cellid, subcount, droprate, geneid_drop,
   return(yimpute)
 }
 
-
 imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 10, 
                              out_dir, ncores){
   count = as.matrix(count)
@@ -124,20 +123,26 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   J = ncol(count)
   count_imp = count
   
-  # find highly variable genes
-  count_hv = find_hv_genes(count, I, J)
-  
-  print("inferring cell similarities ...")
-  set.seed(Kcluster)
-  neighbors_res = find_neighbors(count_hv = count_hv, labeled = FALSE, J = J, 
-                                 Kcluster = Kcluster, ncores = ncores)
-  dist_cells = neighbors_res$dist_cells
-  clust = neighbors_res$clust
+  if(Kcluster == 1){
+    clust = rep(1, J)
+  }else{
+    # find highly variable genes
+    count_hv = find_hv_genes(count, I, J)
+    
+    print("inferring cell similarities ...")
+    set.seed(Kcluster)
+    neighbors_res = find_neighbors(count_hv = count_hv, labeled = FALSE, J = J, 
+                                   Kcluster = Kcluster, ncores = ncores)
+    dist_cells = neighbors_res$dist_cells
+    clust = neighbors_res$clust
+  }
+
   saveRDS(clust, file = paste0(out_dir, "clust.rds"))
   # mixture model
   nclust = sum(!is.na(unique(clust)))
   cl = makeCluster(ncores)
   registerDoParallel(cl)
+  
   
   for(cc in 1:nclust){
     print(paste("estimating dropout probability for type", cc, "..."))

@@ -16,6 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 ## News
+> 2018/01/12:
+
+ + Version 0.0.5 is released!
+ + It is now possible to apply scImpute on just one cell population by setting `Kcluster = 1`.
+
 > 2017/10/27:
 
  + Version 0.0.4 is released!

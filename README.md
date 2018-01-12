@@ -1,11 +1,16 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2017-10-27
+2018-01-12
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 News
 ----
+
+> 2018/01/12:
+
+-   Version 0.0.5 is released!
+-   It is now possible to apply scImpute on just one cell population by setting `Kcluster = 1`.
 
 > 2017/10/27:
 
