@@ -116,6 +116,7 @@ impute_nnls = function(Ic, cellid, subcount, droprate, geneid_drop,
   return(yimpute)
 }
 
+
 imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 10, 
                              out_dir, ncores){
   count = as.matrix(count)
@@ -123,12 +124,22 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   J = ncol(count)
   count_imp = count
   
+  # find highly variable genes
+  count_hv = find_hv_genes(count, I, J)
+  
   if(Kcluster == 1){
     clust = rep(1, J)
+    dist_cells_list = mclapply(1:J, function(id1){
+      sapply(1:J, function(id2){
+        if(id1 <= id2) return(0)
+        sse = sum((count_hv[, id1] - count_hv[, id2])^2)
+        sqrt(sse)
+      })
+    }, mc.cores = ncores)
+    dist_cells = matrix(0, nrow = J, ncol = J)
+    for(cellid in 1:J){dist_cells[cellid, ] = dist_cells_list[[cellid]]}
+    dist_cells = dist_cells + t(dist_cells)
   }else{
-    # find highly variable genes
-    count_hv = find_hv_genes(count, I, J)
-    
     print("inferring cell similarities ...")
     set.seed(Kcluster)
     neighbors_res = find_neighbors(count_hv = count_hv, labeled = FALSE, J = J, 
@@ -142,7 +153,6 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   nclust = sum(!is.na(unique(clust)))
   cl = makeCluster(ncores)
   registerDoParallel(cl)
-  
   
   for(cc in 1:nclust){
     print(paste("estimating dropout probability for type", cc, "..."))
