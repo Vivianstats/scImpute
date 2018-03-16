@@ -1,34 +1,17 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2018-01-12
+2018-03-16
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-News
-----
+Latest News
+-----------
 
-> 2018/01/12:
+> 2018/03/16:
 
--   Version 0.0.5 is released!
--   It is now possible to apply scImpute on just one cell population by setting `Kcluster = 1`.
-
-> 2017/10/27:
-
--   Version 0.0.4 is released!
--   scImpute now supports multi-code parallelism.
-
-> 2017/10/22:
-
--   Version 0.0.3 is released!
--   Estimation of dropout probabilities is more accurate.
--   Imputation step is more robust.
--   `scimpute()` incorporates a new parameter `Kcluster` to specify the number of cell subpopulations.
--   `scImpute` is now able to detect outlier cells.
-
-> 2017/07/01:
-
--   Version 0.0.2 is released!
--   This version speeds up the first step in `scImpute` and program now completes in a few seconds when applied to a dataset with 10,000 genes and 100 cells (using single core).
+-   Version 0.0.6 is released!
+-   The scImpute method is published at [*Nature Communications*](https://www.nature.com/articles/s41467-018-03405-7).
+-   scImpute now supports input and output in the format of R objects (.rds).
 
 Introduction
 ------------
@@ -40,6 +23,8 @@ Introduction
 -   clustering of cell populations
 -   differential gene expression analysis
 -   time-series analysis of gene expression dynamics
+
+The users can refer to our paper [An accurate and robust imputation method scImpute for single-cell RNA-seq data](https://www.nature.com/articles/s41467-018-03405-7) for a detailed description of the modeling and applications.
 
 Any suggestions on the package are welcome! For technical problems, please report to [Issues](https://github.com/Vivianstats/scImpute/issues). For suggestions and comments on the method, please contact Wei (<liw@ucla.edu>) or Dr. Jessica Li (<jli@stat.ucla.edu>).
 
@@ -73,3 +58,29 @@ scimpute(# full path to raw count matrix
 ```
 
 This function returns the column indices of outlier cells, and creates a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
+
+Updates
+-------
+
+> 2018/01/12:
+
+-   Version 0.0.5 is released!
+-   It is now possible to apply scImpute on just one cell population by setting `Kcluster = 1`.
+
+> 2017/10/27:
+
+-   Version 0.0.4 is released!
+-   scImpute now supports multi-code parallelism.
+
+> 2017/10/22:
+
+-   Version 0.0.3 is released!
+-   Estimation of dropout probabilities is more accurate.
+-   Imputation step is more robust.
+-   `scimpute()` incorporates a new parameter `Kcluster` to specify the number of cell subpopulations.
+-   `scImpute` is now able to detect outlier cells.
+
+> 2017/07/01:
+
+-   Version 0.0.2 is released!
+-   This version speeds up the first step in `scImpute` and program now completes in a few seconds when applied to a dataset with 10,000 genes and 100 cells (using single core).

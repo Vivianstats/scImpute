@@ -2,11 +2,11 @@
 #'
 #' @param count_path A character specifying the full path of the raw count matrix;
 #' @param infile A character specifying the type of file storing the raw count matrix;
-#' can be either "csv" or "txt". The input file shoule have rows representing genes and
+#' can be "csv", "txt", or "rds". The input file shoule have rows representing genes and
 #' columns representing cells, with its first row as cell names 
 #' and first column as gene names.
 #' @param outfile A character specifying the type of file storing the imputed count matrix;
-#' can be either "csv" or "txt".
+#' can be "csv", "txt", or "rds".
 #' @param out_dir A character specifying the full path of the output directory, 
 #' which is used to store all intermdediate and final outputs.
 #' @param labeled A logical value indicating whether cell type information is available.
@@ -21,7 +21,7 @@
 #' Each cell type should have at least two cells for imputation.
 #' @param ncores A integer specifying the number of cores used for parallel computation.
 #' @return scImpute returns a vector giving the column indices of outlier cells.
-#' It saves the imputed count matrix to scimpute.csv or scimpute.txt 
+#' It saves the imputed count matrix to scimpute_count.csv, scimpute_count.txt, or scimpute_count.rds 
 #' (depending on \code{outfile}) to \code{out_dir}.
 #' @export
 #' @import parallel
@@ -33,7 +33,8 @@
 #' @importFrom utils read.csv read.table write.csv write.table
 #' @author Wei Vivian Li, \email{liw@ucla.edu}
 #' @author Jingyi Jessica Li, \email{jli@stat.ucla.edu}
-#' @references \url{https://www.biorxiv.org/content/early/2017/05/24/141598}
+#' @references Li, W. V., & Li, J. J. (2018). An accurate and robust imputation method 
+#' scImpute for single-cell RNA-seq data. \emph{Nature Communications}, 9(1), 997.
 scimpute <-
 function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE, 
           drop_thre = 0.5, Kcluster = NULL, labels = NULL, ncores = 5) 

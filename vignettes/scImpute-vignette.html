@@ -12,7 +12,7 @@
 
 <meta name="author" content="Wei Vivian Li, Jingyi Jessica Li" />
 
-<meta name="date" content="2018-01-12" />
+<meta name="date" content="2018-03-16" />
 
 <title>Introduction to scImpute</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to scImpute</h1>
 <h4 class="author"><em>Wei Vivian Li, Jingyi Jessica Li</em></h4>
-<h4 class="date"><em>2018-01-12</em></h4>
+<h4 class="date"><em>2018-03-16</em></h4>
 
 
 
@@ -99,7 +99,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="step-by-step-description" class="section level2">
 <h2>Step-by-step description</h2>
-<p>The input file can be either a <code>.csv</code> file or <code>.txt</code> file. In both cases, the <strong>first column</strong> should give the gene names and the <strong>first row</strong> should give the cell names. We use the example files in the package as illustration. If the raw counts are stored in a <code>.csv</code> file, and we also hope to output the imputed matrix into a <code>.csv</code> file, then specify this information with</p>
+<p>The input file can be a <code>.csv</code> file, <code>.txt</code> file, or <code>.rds</code> file. In all cases, the <strong>first column</strong> should give the gene names and the <strong>first row</strong> should give the cell names. We use the example files in the package as illustration. If the raw counts are stored in a <code>.csv</code> file, and we also hope to output the imputed matrix into a <code>.csv</code> file, then specify this information with</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># full path of the input file</span>
 count_path =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;raw_count.csv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;scImpute&quot;</span>)
 infile =<span class="st"> &quot;csv&quot;</span>

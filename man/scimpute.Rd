@@ -12,12 +12,12 @@ scimpute(count_path, infile = "csv", outfile = "csv", out_dir,
 \item{count_path}{A character specifying the full path of the raw count matrix;}
 
 \item{infile}{A character specifying the type of file storing the raw count matrix;
-can be either "csv" or "txt". The input file shoule have rows representing genes and
+can be "csv", "txt", or "rds". The input file shoule have rows representing genes and
 columns representing cells, with its first row as cell names 
 and first column as gene names.}
 
 \item{outfile}{A character specifying the type of file storing the imputed count matrix;
-can be either "csv" or "txt".}
+can be "csv", "txt", or "rds".}
 
 \item{out_dir}{A character specifying the full path of the output directory, 
 which is used to store all intermdediate and final outputs.}
@@ -40,14 +40,15 @@ Each cell type should have at least two cells for imputation.}
 }
 \value{
 scImpute returns a vector giving the column indices of outlier cells.
-It saves the imputed count matrix to scimpute.csv or scimpute.txt 
+It saves the imputed count matrix to scimpute_count.csv, scimpute_count.txt, or scimpute_count.rds 
 (depending on \code{outfile}) to \code{out_dir}.
 }
 \description{
 use scImpute to impute dropout values in scRNA-seq data
 }
 \references{
-\url{https://www.biorxiv.org/content/early/2017/05/24/141598}
+Li, W. V., & Li, J. J. (2018). An accurate and robust imputation method 
+scImpute for single-cell RNA-seq data. \emph{Nature Communications}, 9(1), 997.
 }
 \author{
 Wei Vivian Li, \email{liw@ucla.edu}

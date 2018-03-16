@@ -47,7 +47,7 @@ This function returns the column indices of outlier cells, and creates a new fil
 
 ## Step-by-step description
 
-The input file can be either a `.csv` file or `.txt` file. In both cases, the **first column** should give the gene names and the **first row** should give the cell names. We use the example files in the package as illustration. If the raw counts are stored in a `.csv` file, and we also hope to output the imputed matrix into a `.csv` file, then specify this information with
+The input file can be a `.csv` file, `.txt` file, or `.rds` file. In all cases, the **first column** should give the gene names and the **first row** should give the cell names. We use the example files in the package as illustration. If the raw counts are stored in a `.csv` file, and we also hope to output the imputed matrix into a `.csv` file, then specify this information with
 ```{r eval = FALSE}
 # full path of the input file
 count_path = system.file("extdata", "raw_count.csv", package = "scImpute")

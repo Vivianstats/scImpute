@@ -110,9 +110,9 @@ impute_nnls = function(Ic, cellid, subcount, droprate, geneid_drop,
                   positive = TRUE, lambda1 = 0, lambda2 = 0, 
                   maxiter = 3000, trace = FALSE)
   ynew = penalized::predict(nnls, penalized = ximpute, unpenalized = ~0)[,1]
-  
   yimpute[geneid_drop] = ynew
   yimpute[geneid_obs] = yobs[geneid_obs]
+  yimpute[yimpute > max(subcount)] = yobs[yimpute > max(subcount)]
   return(yimpute)
 }
 

@@ -1,8 +1,8 @@
 Package: scImpute
 Type: Package
 Title: Accurate and robust imputation of single-cell RNA sequencing data
-Version: 0.0.5
-Date: 2018-01-12
+Version: 0.0.6
+Date: 2018-03-16
 Author: Wei Vivian Li, Jingyi Jessica Li
 Maintainer: Wei Vivian Li <liw@ucla.edu>
 Description: scRNA-seq analysis is complicated by the excess of zero or near zero counts in the data, which are the so-called dropouts due to low amounts of mRNA within each individual cell. scImpute is developed to simultaneously determine which expression values are affected by dropout events in scRNA-seq data and perform imputation only on dropout entries.

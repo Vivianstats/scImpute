@@ -11,9 +11,10 @@ function (count_imp, filetype, out_dir)
     else if (filetype == "txt") {
         write.table(count_imp, file = paste0(out_dir, "scimpute_count.txt"), 
             quote = FALSE)
-    }
-    else {
-        print("filetype can be either 'csv' or 'txt'!")
+    }else if (filetype == "rds") {
+        saveRDS(count_imp, file = paste0(out_dir, "scimpute_count.rds"))
+    }else {
+        print("filetype can be 'csv', 'txt', or 'rds'!")
         stop()
     }
     return(0)
