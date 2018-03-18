@@ -62,7 +62,9 @@ scimpute(# full path to raw count matrix
          Kcluster = 2,             # 2 cell subpopulations
          ncores = 10)              # number of cores used in parallel computation
 ```
-This function returns the column indices of outlier cells, and creates a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
+This function returns the column indices of outlier cells, and creates a new file `scimpute_count.csv` in `out_dir` to store the imputed count matrix. Please note that we recommend applying scImpute on the whole-genome count matrix. A filtering step on genes is acceptable but most genes should be present to ensure robust identification of dropouts. 
+
+For detailed usage, please refer to the package [manual](https://github.com/Vivianstats/scImpute/blob/master/inst/docs/) or [vignette](https://github.com/Vivianstats/scImpute/blob/master/vignettes/scImpute-vignette.Rmd).
 
 
 ## Updates
