@@ -96,7 +96,7 @@ impute_nnls = function(Ic, cellid, subcount, droprate, geneid_drop,
   xx = subcount[geneid_obs, nbs]
   yy = subcount[geneid_obs, cellid]
   ximpute = subcount[geneid_drop, nbs]
-  num_thre = 1000
+  num_thre = 500
   if(ncol(xx) >= min(num_thre, nrow(xx))){
     if (num_thre >= nrow(xx)){
       new_thre = round((2*nrow(xx)/3))
@@ -112,7 +112,8 @@ impute_nnls = function(Ic, cellid, subcount, droprate, geneid_drop,
   ynew = penalized::predict(nnls, penalized = ximpute, unpenalized = ~0)[,1]
   yimpute[geneid_drop] = ynew
   yimpute[geneid_obs] = yobs[geneid_obs]
-  yimpute[yimpute > max(subcount)] = yobs[yimpute > max(subcount)]
+  maxobs = apply(subcount, 1, max)
+  yimpute[yimpute > maxobs] = maxobs[yimpute > maxobs]
   return(yimpute)
 }
 
@@ -192,7 +193,7 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
     # registerDoSNOW(cl)
     subres = foreach(cellid = 1:Jc, .packages = c("penalized"), 
                      .combine = cbind, .export = c("impute_nnls")) %dopar% {
-      if (cellid %% 100 == 0) {gc()}
+      if (cellid %% 10 == 0) {gc()}
       nbs = setdiff(1:Jc, cellid)
       if (length(nbs) == 0) {return(NULL)}
       geneid_drop = setA[[cellid]]
@@ -206,8 +207,6 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
       }
       return(y)
     }
-    
-    
     count_imp[valid_genes, cells] = subres
   }
   stopCluster(cl)
