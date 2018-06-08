@@ -7,11 +7,10 @@ Wei Vivian Li, Jingyi Jessica Li
 Latest News
 -----------
 
-> 2018/03/16:
+> 2018/06/08:
 
--   Version 0.0.6 is released!
--   The scImpute method is published at [*Nature Communications*](https://www.nature.com/articles/s41467-018-03405-7).
--   scImpute now supports input and output in the format of R objects (.rds).
+-   Version 0.0.7 is released!
+-   New option for application on TPM values.
 
 Introduction
 ------------
@@ -63,6 +62,11 @@ For detailed usage, please refer to the package [manual](https://github.com/Vivi
 
 Updates
 -------
+> 2018/03/16:
+
+-   Version 0.0.6 is released!
+-   The scImpute method is published at [*Nature Communications*](https://www.nature.com/articles/s41467-018-03405-7).
+-   scImpute now supports input and output in the format of R objects (.rds).
 
 > 2018/01/12:
 
