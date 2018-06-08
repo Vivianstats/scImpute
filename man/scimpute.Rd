@@ -4,9 +4,9 @@
 \alias{scimpute}
 \title{use scImpute to impute dropout values in scRNA-seq data}
 \usage{
-scimpute(count_path, infile = "csv", outfile = "csv", out_dir,
-  labeled = FALSE, drop_thre = 0.5, Kcluster = NULL, labels = NULL,
-  ncores = 5)
+scimpute(count_path, infile = "csv", outfile = "csv", type = "count",
+  out_dir, labeled = FALSE, drop_thre = 0.5, Kcluster = NULL,
+  labels = NULL, genelen = NULL, ncores = 5)
 }
 \arguments{
 \item{count_path}{A character specifying the full path of the raw count matrix;}
@@ -18,6 +18,9 @@ and first column as gene names.}
 
 \item{outfile}{A character specifying the type of file storing the imputed count matrix;
 can be "csv", "txt", or "rds".}
+
+\item{type}{A character specifying the type of values in the expression matrix. 
+Can be "count" (default) or "TPM".}
 
 \item{out_dir}{A character specifying the full path of the output directory, 
 which is used to store all intermdediate and final outputs.}
@@ -35,6 +38,10 @@ This parameter can be determined based on prior knowledge or clustering of raw d
 \item{labels}{A character vector specifying the cell type of 
 each column in the raw count matrix. Only needed when \code{labeled = TRUE}.
 Each cell type should have at least two cells for imputation.}
+
+\item{genelen}{An integer vector giving the length of each gene. 
+Order must match the gene orders in the expression matrix.
+\code{genelen} must be specified if \code{type = "count"}.}
 
 \item{ncores}{A integer specifying the number of cores used for parallel computation.}
 }

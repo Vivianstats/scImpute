@@ -12,7 +12,7 @@
 
 <meta name="author" content="Wei Vivian Li, Jingyi Jessica Li" />
 
-<meta name="date" content="2018-03-16" />
+<meta name="date" content="2018-06-08" />
 
 <title>Introduction to scImpute</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to scImpute</h1>
 <h4 class="author"><em>Wei Vivian Li, Jingyi Jessica Li</em></h4>
-<h4 class="date"><em>2018-03-16</em></h4>
+<h4 class="date"><em>2018-06-08</em></h4>
 
 
 
@@ -123,7 +123,7 @@ ncores =<span class="st"> </span><span class="dv">10</span>
 <p>Note that the order of parameters matters in R functions, so we suggest using the format in <strong>Quick start</strong> to specify parameters and avoid mistakes. If the users would like to apply <code>scImpute</code> on data coming from homogeneous cells, this can be achieved by setting <code>Kcluster = 1</code> and <code>labeled = FALSE</code>.</p>
 </div>
 <div id="apply-scimpute-with-cell-type-information" class="section level2">
-<h2>Apply scImpute with cell type information</h2>
+<h2>Apply <code>scImpute</code> with cell type information</h2>
 <p>Sometimes users may have the cell type (or subpopulation) information of the single cells and <code>scimpute</code> can take advantage of this information to impute among each cell type. To do this, we need a character vector <code>labels</code> specifying the cell type of each column in the raw count matrix. In other words, the length of <code>labels</code> equals the number of cells and the order of elements in <code>labels</code> should match the order of columns in the raw count matrix. Then we just need to specify <code>labeled = TRUE</code> in <code>scimpute</code> (default is <code>FALSE</code>) and specify the <code>labels</code> argument. <code>Kcluster</code> is not used when <code>labeled = TRUE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">labels =<span class="st"> </span><span class="kw">readRDS</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;labels.rds&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;scImpute&quot;</span>))
 labels[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]
@@ -136,6 +136,22 @@ labels[<span class="dv">1</span><span class="op">:</span><span class="dv">5</spa
          <span class="dt">labeled =</span> <span class="ot">TRUE</span>, 
          <span class="dt">drop_thre =</span> <span class="fl">0.5</span>,
          <span class="dt">labels =</span> labels, 
+         <span class="dt">ncores =</span> <span class="dv">10</span>)</code></pre></div>
+</div>
+<div id="apply-scimpute-to-tpm-values" class="section level2">
+<h2>Apply <code>scImpute</code> to TPM values</h2>
+<p>We strongly suggest using <code>scImpute</code> on count matrices. However, if only TPM values are available, users can apply <code>scImpute</code> with gene lengths supplied. <code>scImpute</code> will use the gene lengths (sum of exon lengths) to scale the data , which ensures a good fitting of the mixture models. In this case, users need to specify <code>type = &quot;TPM&quot;</code> (<code>type = &quot;count&quot;</code> by default), and supply a vector <code>genelen</code> of gene lengths. The order of genes in <code>genelen</code> should match the order in the expression matrix. For example:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="op">&gt;</span><span class="st"> </span>genelen[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+ENSMUSG00000021252 ENSMUSG00000007777 ENSMUSG00000024442
+              <span class="dv">4235</span>                <span class="dv">998</span>               <span class="dv">2404</span>
+
+<span class="kw">scimpute</span>(count_path, 
+         <span class="dt">infile =</span> <span class="st">&quot;csv&quot;</span>, 
+         <span class="dt">outfile =</span> <span class="st">&quot;csv&quot;</span>, 
+         <span class="dt">out_dir =</span> out_dir,
+         <span class="dt">type =</span> <span class="st">&quot;TPM&quot;</span>
+         <span class="dt">genelen =</span> genelen,
+         <span class="dt">drop_thre =</span> <span class="fl">0.5</span>,
          <span class="dt">ncores =</span> <span class="dv">10</span>)</code></pre></div>
 </div>
 <div id="how-to-save-computation-time-with-scimpute" class="section level2">

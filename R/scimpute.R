@@ -9,8 +9,13 @@
 #' can be "csv", "txt", or "rds".
 #' @param out_dir A character specifying the full path of the output directory, 
 #' which is used to store all intermdediate and final outputs.
+#' @param type A character specifying the type of values in the expression matrix. 
+#' Can be "count" (default) or "TPM".
 #' @param labeled A logical value indicating whether cell type information is available.
 #' \code{labels} must be specified if \code{labeled = TRUE}.
+#' @param genelen An integer vector giving the length of each gene. 
+#' Order must match the gene orders in the expression matrix.
+#' \code{genelen} must be specified if \code{type = "count"}.
 #' @param drop_thre A number between 0 and 1, 
 #' specifying the threshold to determine dropout values.
 #' @param Kcluster An integer specifying the number of cell subpopulations. 
@@ -36,8 +41,8 @@
 #' @references Li, W. V., & Li, J. J. (2018). An accurate and robust imputation method 
 #' scImpute for single-cell RNA-seq data. \emph{Nature Communications}, 9(1), 997.
 scimpute <-
-function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE, 
-          drop_thre = 0.5, Kcluster = NULL, labels = NULL, ncores = 5) 
+function (count_path, infile = "csv", outfile = "csv", type = "count", out_dir, labeled = FALSE, 
+          drop_thre = 0.5, Kcluster = NULL, labels = NULL, genelen = NULL, ncores = 5) 
 {   
     if(labeled == TRUE & is.null(labels)){
       stop("'labels' must be specified when 'labeled = TRUE'!")
@@ -45,9 +50,14 @@ function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE,
     if(labeled == FALSE & is.null(Kcluster)){
       stop("'Kcluster' must be specified when 'labeled = FALSE'!")
     }
+    if(!(type %in% c("count", "TPM"))){ stop("expression values can be either 'count' or 'TPM'!") }
+    if(type == "TPM" & is.null(genelen)){ stop("'genelen' must be specified when type = 'TPM'!") }
+  
     # print(drop_thre)
     print("reading in raw count matrix ...")
-    count_lnorm = read_count(filetype = infile, path = count_path, out_dir = out_dir)
+    dir.create(out_dir, recursive = TRUE)
+    count_lnorm = read_count(filetype = infile, path = count_path, out_dir = out_dir, 
+                             type = type, genelen = genelen)
     if(labeled == TRUE){
       if(length(labels) != ncol(count_lnorm)){
         stop("number of cells does not match number of labels !")
@@ -74,7 +84,7 @@ function (count_path, infile = "csv", outfile = "csv", out_dir, labeled = FALSE,
     rownames(count_imp) = genenames
     colnames(count_imp) = cellnames
     print("writing imputed count matrix ...")
-    write_count(count_imp, filetype = outfile, out_dir)
+    write_count(count_imp, filetype = outfile, out_dir, type = type, genelen = genelen)
     return(outliers)
 }
 

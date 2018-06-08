@@ -85,7 +85,7 @@ If `outfile = "csv"`, this function will create a new file `scimpute_count.csv` 
 
 Note that the order of parameters matters in R functions, so we suggest using the format in **Quick start** to specify parameters and avoid mistakes. If the users would like to apply `scImpute` on data coming from homogeneous cells, this can be achieved by setting `Kcluster = 1` and `labeled = FALSE`. 
 
-## Apply scImpute with cell type information
+## Apply `scImpute` with cell type information
 
 Sometimes users may have the cell type (or subpopulation) information of the single cells and `scimpute` can take advantage of this information to impute among each cell type. To do this, we need a character vector `labels` specifying the cell type of each column in the raw count matrix. In other words, the length of `labels` equals the number of cells and the order of elements in `labels` should match the order of columns in the raw count matrix. Then we just need to specify `labeled = TRUE` in `scimpute` (default is `FALSE`) and specify the `labels` argument. `Kcluster` is not used when `labeled = TRUE`.
 ```{r eval = FALSE}
@@ -103,6 +103,23 @@ scimpute(count_path,
          ncores = 10)
 ```
 
+## Apply `scImpute` to TPM values
+
+We strongly suggest using `scImpute` on count matrices. However, if only TPM values are available, users can apply `scImpute` with gene lengths supplied. `scImpute` will use the gene lengths (sum of exon lengths) to scale the data , which ensures a good fitting of the mixture models. In this case, users need to specify `type = "TPM"` (`type = "count"` by default), and supply a vector `genelen` of gene lengths. The order of genes in `genelen` should match the order in the expression matrix. For example:
+```{r eval = FALSE}
+> genelen[1:3]
+ENSMUSG00000021252 ENSMUSG00000007777 ENSMUSG00000024442
+              4235                998               2404
+
+scimpute(count_path, 
+         infile = "csv", 
+         outfile = "csv", 
+         out_dir = out_dir,
+         type = "TPM"
+         genelen = genelen,
+         drop_thre = 0.5,
+         ncores = 10)
+```
 
 ## How to save computation time with `scImpute`
 
