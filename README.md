@@ -1,7 +1,7 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2018-03-18
+2018-06-08
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Latest News
