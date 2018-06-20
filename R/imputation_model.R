@@ -127,7 +127,7 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   
   # find highly variable genes
   count_hv = find_hv_genes(count, I, J)
-  
+  print("searching candidate neighbors ... ")
   if(Kcluster == 1){
     clust = rep(1, J)
     dist_cells_list = mclapply(1:J, function(id1){
@@ -227,6 +227,7 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
   count_imp = count
   
   count_hv = find_hv_genes(count, I, J)
+  print("searching candidate neighbors ... ")
   neighbors_res = find_neighbors(count_hv = count_hv, labeled = TRUE, J = J,  
                                  ncores = ncores, cell_labels = cell_labels)
   dist_cells = neighbors_res$dist_cells

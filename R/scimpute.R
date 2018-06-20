@@ -66,6 +66,7 @@ function (count_path, infile = "csv", outfile = "csv", type = "count", out_dir, 
     genenames = rownames(count_lnorm)
     cellnames = colnames(count_lnorm)
     
+    print("imputation starts ...")
     if (labeled == FALSE){
       res_imp = imputation_model8(count = count_lnorm, labeled = FALSE, 
                                   point = log10(1.01), drop_thre = drop_thre, 
