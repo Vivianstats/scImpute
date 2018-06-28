@@ -36,6 +36,7 @@
 #' @importFrom kernlab specc
 #' @import penalized 
 #' @importFrom utils read.csv read.table write.csv write.table
+#' @importFrom rsvd rpca
 #' @author Wei Vivian Li, \email{liw@ucla.edu}
 #' @author Jingyi Jessica Li, \email{jli@stat.ucla.edu}
 #' @references Li, W. V., & Li, J. J. (2018). An accurate and robust imputation method 
@@ -58,6 +59,8 @@ function (count_path, infile = "csv", outfile = "csv", type = "count", out_dir, 
     dir.create(out_dir, recursive = TRUE)
     count_lnorm = read_count(filetype = infile, path = count_path, out_dir = out_dir, 
                              type = type, genelen = genelen)
+    print("reading finished!")
+    
     if(labeled == TRUE){
       if(length(labels) != ncol(count_lnorm)){
         stop("number of cells does not match number of labels !")

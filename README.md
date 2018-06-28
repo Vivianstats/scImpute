@@ -1,16 +1,16 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2018-06-08
+2018-06-28
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Latest News
 -----------
 
-> 2018/06/08:
+> 2018/06/27:
 
--   Version 0.0.7 is released!
--   New option for application on TPM values.
+-   Version 0.0.8 is released!
+-   Faster implementation of dimension reduction.
 
 Introduction
 ------------
@@ -62,6 +62,12 @@ For detailed usage, please refer to the package [manual](https://github.com/Vivi
 
 Updates
 -------
+
+> 2018/06/08:
+
+-   Version 0.0.7 is released!
+-   New option for application on TPM values.
+
 > 2018/03/16:
 
 -   Version 0.0.6 is released!
