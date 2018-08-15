@@ -32,26 +32,38 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
       cell_inds = which(clust == ll)
       count_hv_sub = count_hv[, cell_inds, drop = FALSE]
       if(J < 1000){
+        var_thre = 0.4
         pca = prcomp(t(count_hv_sub))
+        eigs = (pca$sdev)^2
+        var_cum = cumsum(eigs)/sum(eigs)
+        if(max(var_cum) <= var_thre){
+          npc = length(var_cum)
+        }else{
+          npc = which.max(var_cum > var_thre)
+          if (labeled == FALSE){ npc = max(npc, Kcluster) }
+        }
       }else{
-        pca = rpca(t(count_hv_sub), k = 100, center = TRUE, scale = FALSE) 
+        var_thre = 0.6
+        pca = rpca(t(count_hv_sub), k = 1000, center = TRUE, scale = FALSE) 
+        eigs = (pca$sdev)^2
+        var_cum = cumsum(eigs)/sum(eigs)
+        if(max(var_cum) <= var_thre){
+          npc = length(var_cum)
+        }else{
+          npc = which.max(var_cum > var_thre)
+          if (labeled == FALSE){ npc = max(npc, Kcluster) }
+        }
       }
-      eigs = (pca$sdev)^2
-      var_cum = cumsum(eigs)/sum(eigs)
-      if(max(var_cum) <= 0.8){
-        npc = length(var_cum)
-      }else{
-        npc = which.max(var_cum > 0.8)
-      }
+      
       if (npc < 3){ npc = 3 }
       mat_pcs = t(pca$x[, 1:npc]) 
       
       dist_cells_list = mclapply(1:length(cell_inds), function(id1){
-        sapply(1:length(cell_inds), function(id2){
-          if(id1 <= id2) return(0)
+        d = sapply(1:id1, function(id2){
           sse = sum((mat_pcs[, id1] - mat_pcs[, id2])^2)
           sqrt(sse)
         })
+        return(c(d, rep(0, length(cell_inds)-id1)))
       }, mc.cores = ncores)
       dist_cells = matrix(0, nrow = length(cell_inds), ncol = length(cell_inds))
       for(cellid in 1:length(cell_inds)){dist_cells[cellid, ] = dist_cells_list[[cellid]]}
@@ -65,17 +77,27 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
     ## dimeansion reduction
     print("dimension reduction ...")
     if(J < 1000){
+      var_thre = 0.4
       pca = prcomp(t(count_hv))
+      eigs = (pca$sdev)^2
+      var_cum = cumsum(eigs)/sum(eigs)
+      if(max(var_cum) <= var_thre){
+        npc = length(var_cum)
+      }else{
+        npc = which.max(var_cum > var_thre)
+        if (labeled == FALSE){ npc = max(npc, Kcluster) }
+      }
     }else{
-      pca = rpca(t(count_hv), k = 100, center = TRUE, scale = FALSE) 
-    }
-    eigs = (pca$sdev)^2
-    var_cum = cumsum(eigs)/sum(eigs)
-    if(max(var_cum) <= 0.8){
-      npc = length(var_cum)
-    }else{
-      npc = which.max(var_cum > 0.8)
-      if (labeled == FALSE){ npc = max(npc, Kcluster) }
+      var_thre = 0.6
+      pca = rpca(t(count_hv), k = 1000, center = TRUE, scale = FALSE) 
+      eigs = (pca$sdev)^2
+      var_cum = cumsum(eigs)/sum(eigs)
+      if(max(var_cum) <= var_thre){
+        npc = length(var_cum)
+      }else{
+        npc = which.max(var_cum > var_thre)
+        if (labeled == FALSE){ npc = max(npc, Kcluster) }
+      }
     }
     if (npc < 3){ npc = 3 }
     mat_pcs = t(pca$x[, 1:npc]) # columns are cells
@@ -83,11 +105,11 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
     ## detect outliers
     print("calculating cell distances ...")
     dist_cells_list = mclapply(1:J, function(id1){
-      sapply(1:J, function(id2){
-        if(id1 <= id2) return(0)
+      d = sapply(1:id1, function(id2){
         sse = sum((mat_pcs[, id1] - mat_pcs[, id2])^2)
         sqrt(sse)
       })
+      return(c(d, rep(0, J-id1)))
     }, mc.cores = ncores)
     dist_cells = matrix(0, nrow = J, ncol = J)
     for(cellid in 1:J){dist_cells[cellid, ] = dist_cells_list[[cellid]]}
@@ -174,27 +196,38 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   if(Kcluster == 1){
     clust = rep(1, J)
     if(J < 1000){
+      var_thre = 0.4
       pca = prcomp(t(count_hv))
+      eigs = (pca$sdev)^2
+      var_cum = cumsum(eigs)/sum(eigs)
+      if(max(var_cum) <= var_thre){
+        npc = length(var_cum)
+      }else{
+        npc = which.max(var_cum > var_thre)
+        if (labeled == FALSE){ npc = max(npc, Kcluster) }
+      }
     }else{
-      pca = rpca(t(count_hv), k = 100, center = TRUE, scale = FALSE) 
+      var_thre = 0.6
+      pca = rpca(t(count_hv), k = 1000, center = TRUE, scale = FALSE) 
+      eigs = (pca$sdev)^2
+      var_cum = cumsum(eigs)/sum(eigs)
+      if(max(var_cum) <= var_thre){
+        npc = length(var_cum)
+      }else{
+        npc = which.max(var_cum > var_thre)
+        if (labeled == FALSE){ npc = max(npc, Kcluster) }
+      }
     }
-    eigs = (pca$sdev)^2
-    var_cum = cumsum(eigs)/sum(eigs)
-    if(max(var_cum) <= 0.8){
-      npc = length(var_cum)
-    }else{
-      npc = which.max(var_cum > 0.8)
-      if (labeled == FALSE){ npc = max(npc, Kcluster) }
-    }
+
     if (npc < 3){ npc = 3 }
     mat_pcs = t(pca$x[, 1:npc]) # columns are cells
     
     dist_cells_list = mclapply(1:J, function(id1){
-      sapply(1:J, function(id2){
-        if(id1 <= id2) return(0)
+      d = sapply(1:id1, function(id2){
         sse = sum((mat_pcs[, id1] - mat_pcs[, id2])^2)
         sqrt(sse)
       })
+      return(c(d, rep(0, J-id1)))
     }, mc.cores = ncores)
     dist_cells = matrix(0, nrow = J, ncol = J)
     for(cellid in 1:J){dist_cells[cellid, ] = dist_cells_list[[cellid]]}
@@ -291,7 +324,7 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
   print("searching candidate neighbors ... ")
   neighbors_res = find_neighbors(count_hv = count_hv, labeled = TRUE, J = J,  
                                  ncores = ncores, cell_labels = cell_labels)
-  dist_cells_list = neighbors_res$dist_list
+  dist_cells = neighbors_res$dist_cells
   clust = neighbors_res$clust
   
   # mixture model
@@ -348,7 +381,7 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
       geneid_drop = setA[[cellid]]
       geneid_obs = setB[[cellid]]
       y = try(impute_nnls(Ic, cellid = cellid, subcount, droprate, geneid_drop, 
-                          geneid_obs, nbs, distc = dist_cells_list[[cc]]),
+                          geneid_obs, nbs, distc = dist_cells[cells, cells]),
               silent = TRUE)
       if (class(y) == "try-error") {
         # print(y)
