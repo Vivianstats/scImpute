@@ -31,7 +31,7 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
     dist_list = lapply(1:nclust, function(ll){
       cell_inds = which(clust == ll)
       count_hv_sub = count_hv[, cell_inds, drop = FALSE]
-      if(J < 1000){
+      if(length(cell_inds) < 1000){
         var_thre = 0.4
         pca = prcomp(t(count_hv_sub))
         eigs = (pca$sdev)^2
@@ -76,7 +76,7 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
   if(labeled == FALSE){
     ## dimeansion reduction
     print("dimension reduction ...")
-    if(J < 1000){
+    if(J < 5000){
       var_thre = 0.4
       pca = prcomp(t(count_hv))
       eigs = (pca$sdev)^2
@@ -195,7 +195,7 @@ imputation_model8 = function(count, labeled, point, drop_thre = 0.5, Kcluster = 
   print("searching candidate neighbors ... ")
   if(Kcluster == 1){
     clust = rep(1, J)
-    if(J < 1000){
+    if(J < 5000){
       var_thre = 0.4
       pca = prcomp(t(count_hv))
       eigs = (pca$sdev)^2
