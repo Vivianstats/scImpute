@@ -70,6 +70,7 @@ find_neighbors = function(count_hv, labeled, J, Kcluster = NULL,
       dist_cells = dist_cells + t(dist_cells)
       return(dist_cells)
     })
+
     return(list(dist_list = dist_list, clust = clust))
   }
   
@@ -324,7 +325,7 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
   print("searching candidate neighbors ... ")
   neighbors_res = find_neighbors(count_hv = count_hv, labeled = TRUE, J = J,  
                                  ncores = ncores, cell_labels = cell_labels)
-  dist_cells = neighbors_res$dist_cells
+  dist_list = neighbors_res$dist_list
   clust = neighbors_res$clust
   
   # mixture model
@@ -381,7 +382,7 @@ imputation_wlabel_model8 = function(count, labeled, cell_labels = NULL, point, d
       geneid_drop = setA[[cellid]]
       geneid_obs = setB[[cellid]]
       y = try(impute_nnls(Ic, cellid = cellid, subcount, droprate, geneid_drop, 
-                          geneid_obs, nbs, distc = dist_cells[cells, cells]),
+                          geneid_obs, nbs, distc = dist_list[[cc]]),
               silent = TRUE)
       if (class(y) == "try-error") {
         # print(y)
