@@ -1,11 +1,15 @@
 scImpute: accurate and robust imputation of scRNA-seq data
 ================
 Wei Vivian Li, Jingyi Jessica Li
-2018-08-15
+2019-08-20
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Latest News
 -----------
+
+> 2018/08/20:
+
+-   Since the development of scImpute, new imputation methods have been proposed for scRNA-seq data. These methods have different model assumptions and diverse performances on different datasets. It contributes to both method development and bioinformatic applications to discuss and compare existing imputation methods. However, we realize several issues in existing evaluation and comparison of imputation methods and discuss these issue in our commentary, which is available at [arxiv](https://arxiv.org/abs/1908.07084).
 
 > 2018/08/15:
 
